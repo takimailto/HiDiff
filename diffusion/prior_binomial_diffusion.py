@@ -128,7 +128,7 @@ class PriorBinomialDiffusion:
         :param y_start: the [N x C x ...] tensor of noiseless inputs.
         :param p: the output of a segmentor (prior)
         :param t: the number of diffusion steps (minus 1). Here, 0 means one step.
-        :return: Binomial distribution parameters, of x_start's shape.
+        :return: Binomial distribution parameters, of y_start's shape.
         """
         mean = _extract_into_tensor(self.alphas_cumprod, t, y_start.shape) * y_start + (1 - _extract_into_tensor(self.alphas_cumprod, t, y_start.shape)) * p
         
@@ -205,7 +205,7 @@ class PriorBinomialDiffusion:
                     self._predict_ystart_from_eps(y_t=y, t=t, eps=model_output)
                 )
             model_mean = self.q_posterior_mean(
-                y_start=pred_ystart, x_t=y, p=model_kwargs["p"], t=t
+                y_start=pred_ystart, y_t=y, p=model_kwargs["p"], t=t
             )
             model_mean = th.where((t == 0)[:,None, None, None], pred_ystart, model_mean)
         else:
