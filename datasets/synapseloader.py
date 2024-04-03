@@ -39,7 +39,7 @@ class RandomGenerator(object):
             image, label = random_rotate(image, label)
         x, y = image.shape
         if x != self.output_size[0] or y != self.output_size[1]:
-            image = zoom(image, (self.output_size[0] / x, self.output_size[1] / y), order=3)  # why not 3?
+            image = zoom(image, (self.output_size[0] / x, self.output_size[1] / y), order=3)
             label = zoom(label, (self.output_size[0] / x, self.output_size[1] / y), order=0)
         image = torch.from_numpy(image.astype(np.float32)).unsqueeze(0)
         label = torch.from_numpy(label.astype(np.float32)).unsqueeze(0)
@@ -48,7 +48,7 @@ class RandomGenerator(object):
 
 
 class Synapsedataset(Dataset):
-    def __init__(self, base_dir, list_dir, split="train", transform=transforms.Compose([RandomGenerator(output_size=[256, 256])])): ##################
+    def __init__(self, base_dir, list_dir, split="train", transform=transforms.Compose([RandomGenerator(output_size=[256, 256])])):
         self.transform = transform  # using transform in torch!
         self.split = split
         self.sample_list = open(os.path.join(list_dir, self.split+'.txt')).readlines()
@@ -73,5 +73,4 @@ class Synapsedataset(Dataset):
         if self.transform and self.split == "train":
             sample = self.transform(sample)
             sample["label"] = torch.nn.functional.one_hot(sample["label"].long(), num_classes=9)[0].permute(2,0,1)
-        # sample['case_name'] = self.sample_list[idx].strip('\n')
         return (sample["image"].float(), sample["label"].float())
