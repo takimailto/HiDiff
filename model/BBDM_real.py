@@ -10,7 +10,7 @@ from .basic_module import (
     zero_module,
     timestep_embedding,
 )
-from .binary_cross_attention import CrossAttentionLayer
+from .real_cross_attention import CrossAttentionLayer
 
 
 class ResBlock(nn.Module):
